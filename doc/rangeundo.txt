@@ -1,0 +1,41 @@
+*rangeundo.txt*	Plugin for undoing changes in a visual selection
+
+INTRODUCTION                                *rangeundo*
+
+RangeUndo is a plugin for undoing changes in a visual selection. Inspired by
+the "Undo in region" feature in Emacs.
+
+USAGE                                       *rangeundo-usage*
+
+Map a key to <Plug>(rangeundo) in your |vimrc|.
+
+E.g. >
+    xmap u <Plug>(rangeundo)
+<
+When <Plug>(rangeundo) is executed, the latest change in the selected lines
+will be undone. Continue executing <Plug>(rangeundo) on the same selection
+immediately will undo earlier changes.
+
+Just like |U|, rangeundo itself also counts as a change. So cancel the
+selection and press |u| will redo the changes in the selected lines.
+
+CONFIGURATION                               *rangeundo-configuration*
+
+Set `g:rangeundo_max_undo` before loading the plugin to limit the maximum undo
+levels checked by the plugin, unlimited when not set.
+
+E.g. >
+    let g:rangeundo_max_undo=50
+<
+The plugin contains both lua and vimscript versions of code, the lua version
+will be used if possible. Set `g:rangeundo_use_vimscript` to use the vimscript
+version.
+
+LIMITATIONS                                 *rangeundo-limitations*
+
+The plugin compares undo states line by line, so selecting any characters on a
+line will be the same as selecting the whole line.
+
+The plugin cannot undo changes that are partially inside the selected range.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
