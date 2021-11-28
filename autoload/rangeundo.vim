@@ -73,7 +73,7 @@ function! s:RangeUndo()
 	let l:cur_lines=[]
 	let l:prev_lines=getline(1,'$')
 	let l:undo_count=0
-	while l:undotree.seq_cur>=l:undotree.entries[0].seq
+	while len(l:undotree.entries)>0&&l:undotree.seq_cur>=l:undotree.entries[0].seq
 		let l:undo_count+=1
 		if exists('g:rangeundo_max_undo')&&l:undo_count>g:rangeundo_max_undo
 			break
