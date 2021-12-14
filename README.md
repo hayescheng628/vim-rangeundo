@@ -46,4 +46,4 @@ Install this plugin with a vim plugin manager like
 ## Requirements
 
 - Neovim 0.2.1+ for lua version
-- Vim 7.3+ for vimscript version
+- Vim 7.3.590+ for vimscript version

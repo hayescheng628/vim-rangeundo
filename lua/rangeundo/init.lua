@@ -10,6 +10,54 @@ local function get_range()
 	}
 end
 
+local function get_cur_range()
+	vim.api.nvim_command('normal! gv')
+	local first=fn.getpos("'<")
+	local last=fn.getpos("'>")
+	local curpos=fn.getpos('.')
+	vim.api.nvim_command('execute "normal! \\<ESC>"')
+	if fn.visualmode()=='V' then
+		if curpos[2]~=last[2] then first=last end
+	else
+		if not util.table_equals(curpos,last) then first=last end
+	end
+	return {
+		first=first,
+		last=curpos
+	}
+end
+
+local function restore_cur_range(cur_range,offset)
+	local new_cur_range=get_cur_range()
+	local first=util.table_copy(cur_range.first)
+	local last=util.table_copy(cur_range.last)
+	if last[2]>=first[2] then
+		last[2]=last[2]+offset
+		if last[2]<first[2] then
+			return {
+				first=0,
+				last=0
+			}
+		end
+	else
+		first[2]=first[2]+offset
+		if first[2]<last[2] then
+			return {
+				first=0,
+				last=0
+			}
+		end
+	end
+	if new_cur_range.first[2]~=first[2] then
+		fn.setpos("'<",first)
+	end
+	if new_cur_range.last[2]~=last[2] then
+		fn.setpos("'>",last)
+	end
+	vim.api.nvim_command('normal! gv')
+	return get_range()
+end
+
 local function compare_state(state,cur_changenr,range)
 	if not state.cur_changenr or not state.range then return false end
 	return (
@@ -58,6 +106,7 @@ local function lines_diff(prev_lines,cur_lines)
 end
 
 local function rangeundo()
+	local cur_range=get_cur_range()
 	local state=get_state()
 	undo(state.changenr)
 	local undotree=fn.undotree()
@@ -82,9 +131,8 @@ local function rangeundo()
 				diff.new_lastline-state.offset,
 				true,
 				util.slice(prev_lines,diff.firstline,diff.lastline))
-			vim.api.nvim_command('normal! gv')
 			state.cur_changenr=fn.changenr()
-			state.range=get_range()
+			state.range=restore_cur_range(cur_range,diff.lastline-diff.new_lastline)
 			return
 		else
 			break
@@ -92,7 +140,7 @@ local function rangeundo()
 		undotree=fn.undotree()
 	end
 	undo(state.cur_changenr)
-	vim.api.nvim_command('normal! gv')
+	restore_cur_range(cur_range,0)
 	print('Already at oldest change')
 end
 

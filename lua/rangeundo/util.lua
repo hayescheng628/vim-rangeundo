@@ -8,6 +8,26 @@ local function slice(arr,first,last)
 	return new_arr
 end
 
+local function table_copy(tbl)
+	local new_tbl={}
+	for key,value in pairs(tbl) do
+		new_tbl[key]=value
+	end
+	return new_tbl
+end
+
+local function table_equals(tbl1,tbl2)
+	for key,value in pairs(tbl1) do
+		if tbl2[key]~=value then return false end
+	end
+	for key,value in pairs(tbl2) do
+		if tbl1[key]~=value then return false end
+	end
+	return true
+end
+
 return {
-	slice=slice
+	slice=slice,
+	table_copy=table_copy,
+	table_equals=table_equals
 }
