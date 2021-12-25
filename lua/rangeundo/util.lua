@@ -1,11 +1,11 @@
-local function slice(arr,first,last)
-	local new_arr={}
-	if first<1 then first=1 end
-	if last>#arr then last=#arr end
-	for i=first,last do
-		new_arr[#new_arr+1]=arr[i]
+local function list_slice(list,start,finish)
+	local new_list={}
+	if start<1 then start=1 end
+	if finish>#list then finish=#list end
+	for i=start,finish do
+		new_list[#new_list+1]=list[i]
 	end
-	return new_arr
+	return new_list
 end
 
 local function table_copy(tbl)
@@ -27,7 +27,7 @@ local function table_equals(tbl1,tbl2)
 end
 
 return {
-	slice=slice,
+	list_slice=list_slice,
 	table_copy=table_copy,
 	table_equals=table_equals
 }

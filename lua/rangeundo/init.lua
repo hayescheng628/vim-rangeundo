@@ -130,7 +130,7 @@ local function rangeundo()
 				diff.firstline-state.offset-1,
 				diff.new_lastline-state.offset,
 				true,
-				util.slice(prev_lines,diff.firstline,diff.lastline))
+				util.list_slice(prev_lines,diff.firstline,diff.lastline))
 			state.cur_changenr=fn.changenr()
 			state.range=restore_cur_range(cur_range,diff.lastline-diff.new_lastline)
 			return
