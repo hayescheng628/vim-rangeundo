@@ -85,8 +85,12 @@ function! s:GetState()
 	return l:state
 endfunction
 
-function! s:Undo(n)
-	execute 'silent undo '.a:n
+function! s:Undo(...)
+	if a:0
+		execute 'silent keepjumps undo '.a:1
+	else
+		silent keepjumps undo
+	endif
 endfunction
 
 function! s:LinesDiff(prev_lines,cur_lines)
@@ -131,7 +135,7 @@ function! s:RangeUndo()
 		if exists('g:rangeundo_max_undo')&&l:undo_count>#g:rangeundo_max_undo
 			break
 		endif
-		silent undo
+		call s:Undo()
 		let l:cur_lines=l:prev_lines
 		let l:prev_lines=getline(1,'$')
 		let l:diff=s:LinesDiff(l:prev_lines,l:cur_lines)

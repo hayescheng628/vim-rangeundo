@@ -83,8 +83,8 @@ local function get_state()
 end
 
 local function undo(n)
-	if n then vim.api.nvim_command('silent undo '..n)
-	else vim.api.nvim_command('silent undo') end
+	if n then vim.api.nvim_command('silent keepjumps undo '..n)
+	else vim.api.nvim_command('silent keepjumps undo') end
 end
 
 local function lines_diff(prev_lines,cur_lines)
